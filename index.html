@@ -138,8 +138,6 @@
     .question-box:hover {
       transform: scale(1.1);
     }
-
-    /* Estilização adicional */
     .feedback-icon {
       font-size: 4rem;
       margin-bottom: 20px;
@@ -152,8 +150,6 @@
     .feedback-wrong {
       color: #f44336;
     }
-
-    /* Responsividade */
     @media (max-width: 768px) {
       .question {
         font-size: 1.2rem;
@@ -199,29 +195,22 @@
   </style>
 </head>
 <body>
-  <!-- Tela inicial -->
   <div class="container active" id="start-screen">
     <h1>Desafios de Lógica Verbal</h1>
     <p>Bem-vindo ao jogo! Teste sua lógica com perguntas desafiadoras.</p>
     <button class="btn" onclick="startGame()">Iniciar Perguntas</button>
   </div>
-
-  <!-- Tela de perguntas -->
   <div class="container" id="question-screen">
     <div class="timer" id="timer">30</div>
     <p class="question"></p>
     <div class="answers"></div>
   </div>
-
-  <!-- Tela de feedback -->
   <div class="container" id="feedback-screen">
     <div class="feedback-icon" id="feedback-icon"></div>
     <h2 id="feedback"></h2>
     <p id="explanation" style="font-size: 1.2rem; margin-top: 10px;"></p>
     <button class="btn" onclick="nextQuestion()">Próxima Pergunta</button>
   </div>
-
-  <!-- Tela final -->
   <div class="container" id="final-screen">
     <h1>Resultado Final</h1>
     <p class="result">Você acertou <span id="score"></span> de <span id="total"></span> perguntas.</p>
@@ -319,7 +308,7 @@
         document.getElementById("timer").textContent = timeLeft;
         if (timeLeft <= 0) {
           clearInterval(timer);
-          checkAnswer(-1); // Considera erro se o tempo acabar
+          checkAnswer(-1);
         }
       }, 1000);
     }
