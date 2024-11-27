@@ -78,12 +78,6 @@
       transform: scale(1.05);
     }
 
-    .timer {
-      font-size: 2rem;
-      color: #ff9800;
-      margin-bottom: 20px;
-    }
-
     .result.correct {
       color: #4caf50;
       margin: 10px;
@@ -138,6 +132,7 @@
     .question-box:hover {
       transform: scale(1.1);
     }
+
     .feedback-icon {
       font-size: 4rem;
       margin-bottom: 20px;
@@ -150,6 +145,7 @@
     .feedback-wrong {
       color: #f44336;
     }
+
     @media (max-width: 768px) {
       .question {
         font-size: 1.2rem;
@@ -162,14 +158,6 @@
       .btn {
         font-size: 1rem;
         padding: 12px 24px;
-      }
-
-      .timer {
-        font-size: 1.5rem;
-      }
-
-      .question-image {
-        max-width: 90%;
       }
 
       #score {
@@ -201,7 +189,6 @@
     <button class="btn" onclick="startGame()">Iniciar Perguntas</button>
   </div>
   <div class="container" id="question-screen">
-    <div class="timer" id="timer">30</div>
     <p class="question"></p>
     <div class="answers"></div>
   </div>
@@ -222,7 +209,6 @@
     let currentQuestion = 0;
     let score = 0;
     const results = [];
-    let timer;
 
     const questions = [
       {
@@ -296,25 +282,9 @@
         button.onclick = () => checkAnswer(index);
         answersContainer.appendChild(button);
       });
-
-      startTimer();
-    }
-
-    function startTimer() {
-      let timeLeft = 30;
-      document.getElementById("timer").textContent = timeLeft;
-      timer = setInterval(() => {
-        timeLeft--;
-        document.getElementById("timer").textContent = timeLeft;
-        if (timeLeft <= 0) {
-          clearInterval(timer);
-          checkAnswer(-1);
-        }
-      }, 1000);
     }
 
     function checkAnswer(selectedIndex) {
-      clearInterval(timer);
       const question = questions[currentQuestion];
       const correct = selectedIndex !== -1 && question.answers[selectedIndex].correct;
 
@@ -322,6 +292,10 @@
         question: currentQuestion + 1,
         correct,
       });
+
+      if (correct) {
+        score++;
+      }
 
       document.getElementById("question-screen").classList.remove("active");
       document.getElementById("feedback-screen").classList.add("active");
@@ -345,34 +319,29 @@
 
     function nextQuestion() {
       currentQuestion++;
+
       if (currentQuestion < questions.length) {
+        loadQuestion();
         document.getElementById("feedback-screen").classList.remove("active");
         document.getElementById("question-screen").classList.add("active");
-        loadQuestion();
       } else {
-        showFinalResults();
+        showResults();
       }
     }
 
-    function showFinalResults() {
-      document.getElementById("feedback-screen").classList.remove("active");
+    function showResults() {
       document.getElementById("final-screen").classList.add("active");
-
-      const correctAnswers = results.filter(result => result.correct).length;
-      const totalQuestions = questions.length;
-
-      document.getElementById("score").textContent = correctAnswers;
-      document.getElementById("total").textContent = totalQuestions;
+      document.getElementById("score").textContent = score;
+      document.getElementById("total").textContent = questions.length;
 
       const summary = document.getElementById("summary");
-      summary.innerHTML = results
-        .map(
-          (result, index) =>
-            `<div class="question-box ${result.correct ? "correct" : "wrong"}">
-              ${index + 1}
-            </div>`
-        )
-        .join("");
+      results.forEach(result => {
+        const box = document.createElement("div");
+        box.classList.add("question-box");
+        box.textContent = result.correct ? "✔" : "✘";
+        box.classList.add(result.correct ? "correct" : "wrong");
+        summary.appendChild(box);
+      });
     }
   </script>
 </body>
